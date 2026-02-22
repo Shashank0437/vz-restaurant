@@ -95,7 +95,7 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, observerOptions);
 
-document.querySelectorAll('.animate-on-scroll').forEach(el => {
+document.querySelectorAll('.animate-on-scroll, .img-reveal').forEach(el => {
   observer.observe(el);
 });
 

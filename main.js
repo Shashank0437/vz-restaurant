@@ -6,8 +6,8 @@ import './style.css';
 const themeToggle = document.getElementById('themeToggle');
 const html = document.documentElement;
 
-// Load saved theme or default to light
-const savedTheme = localStorage.getItem('vijay-theme') || 'light';
+// Load saved theme or default to dark
+const savedTheme = localStorage.getItem('vijay-theme') || 'dark';
 html.setAttribute('data-theme', savedTheme);
 
 themeToggle.addEventListener('click', () => {
@@ -150,14 +150,12 @@ document.querySelectorAll('img[loading="lazy"]').forEach(img => {
 document.addEventListener('DOMContentLoaded', () => {
   const videos = [
     document.getElementById('heroVideo1'),
-    document.getElementById('heroVideo2'),
-    document.getElementById('heroVideo3')
+    document.getElementById('heroVideo2')
   ];
   
   if (videos.every(v => v)) {
-    // Slow down the food videos playback
+    // Slow down the food video playback
     videos[0].playbackRate = 0.4;
-    videos[1].playbackRate = 0.4;
 
     let currentIndex = 0;
     
@@ -171,6 +169,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const prevIndex = currentIndex;
       currentIndex = (currentIndex + 1) % videos.length;
       
+      // Play the incoming video to ensure it's running before making it visible
+      videos[currentIndex].play().catch(e => console.log('Video play error:', e));
+      
       // Keep previous video visible underneath while new one fades in on top
       videos[prevIndex].classList.remove('active');
       videos[prevIndex].classList.add('prev');
@@ -181,6 +182,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // Clean up the previous video after the fade transition (2.5s) completes
       setTimeout(() => {
         videos[prevIndex].classList.remove('prev');
+        // Pause the previous video to save RAM and GPU on mobile
+        videos[prevIndex].pause();
       }, 2500);
       
     }, 30000);

@@ -148,31 +148,42 @@ document.querySelectorAll('img[loading="lazy"]').forEach(img => {
 // HERO VIDEO AUTOPLAY FADE-IN & CROSSFADE
 // ============================
 document.addEventListener('DOMContentLoaded', () => {
-  const v1 = document.getElementById('heroVideo1');
-  const v2 = document.getElementById('heroVideo2');
+  const videos = [
+    document.getElementById('heroVideo1'),
+    document.getElementById('heroVideo2'),
+    document.getElementById('heroVideo3')
+  ];
   
-  if (v1 && v2) {
-    // Slow down the food video playback
-    v1.playbackRate = 0.6;
+  if (videos.every(v => v)) {
+    // Slow down the food videos playback
+    videos[0].playbackRate = 0.4;
+    videos[1].playbackRate = 0.4;
 
-    let activeVideo = v1;
-    let nextVideo = v2;
+    let currentIndex = 0;
     
-    // Wait a few seconds to let the static image be appreciated, then fade in the first video (food)
+    // Wait a few seconds to let the static image be appreciated, then fade in the first video
     setTimeout(() => {
-      activeVideo.classList.add('active');
+      videos[currentIndex].classList.add('active');
     }, 4000);
 
-    // Crossfade every 10 seconds between the food and hotel videos
+    // Crossfade every 30 seconds between the videos in sequence
     setInterval(() => {
-      activeVideo.classList.remove('active');
-      nextVideo.classList.add('active');
+      const prevIndex = currentIndex;
+      currentIndex = (currentIndex + 1) % videos.length;
       
-      // Swap pointers
-      let temp = activeVideo;
-      activeVideo = nextVideo;
-      nextVideo = temp;
-    }, 10000);
+      // Keep previous video visible underneath while new one fades in on top
+      videos[prevIndex].classList.remove('active');
+      videos[prevIndex].classList.add('prev');
+      
+      // Fade in the new video
+      videos[currentIndex].classList.add('active');
+      
+      // Clean up the previous video after the fade transition (2.5s) completes
+      setTimeout(() => {
+        videos[prevIndex].classList.remove('prev');
+      }, 2500);
+      
+    }, 30000);
   }
 });
 
